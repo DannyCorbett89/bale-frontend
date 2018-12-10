@@ -1,0 +1,11 @@
+version: '3.5'
+
+services:
+
+  bale-frontend:
+    container_name: bale-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
