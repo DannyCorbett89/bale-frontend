@@ -588,7 +588,7 @@ class MountButtons extends React.Component {
                 <div className="rows">
                     <AddPlayer/>
                     <AddMount/>
-                    <Ranks/>
+                    {/*<Ranks/>*/}
                 </div>;
         } else {
             content = <div/>;
