@@ -22,6 +22,12 @@ import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
+import DialogContentText from "@material-ui/core/es/DialogContentText/DialogContentText";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/es/ListItem/ListItem";
+import Checkbox from "@material-ui/core/es/Checkbox/Checkbox";
+import ListItemText from "@material-ui/core/es/ListItemText/ListItemText";
+import Avatar from "@material-ui/core/es/Avatar/Avatar";
 
 class MessageWindow extends React.Component {
     constructor(props) {
@@ -276,6 +282,121 @@ class AddMountButton extends React.Component {
     }
 }
 
+class Ranks extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+            ranks: []
+        };
+    }
+
+    componentWillMount() {
+        fetch(backendUrl + '/ranks')
+            .then(results => {
+                return results.json();
+            })
+            .then(data => {
+                this.setState({
+                    ranks: data
+                });
+                console.log("ranks", this.state.ranks);
+            })
+            .catch(error => {
+                console.log("Empty response for /ranks", error)
+            });
+    }
+
+    handleClickOpen = () => {
+        this.setState({open: true});
+    };
+
+    handleClose = () => {
+        this.setState({open: false});
+    };
+
+    handleToggle = rank => () => {
+        let newRanks = this.state.ranks;
+        const index = newRanks.indexOf(rank);
+
+        newRanks[index].enabled = !newRanks[index].enabled;
+
+        this.setState({
+            ranks: newRanks
+        });
+    };
+
+    render() {
+        return (
+            <div className="row">
+                <Button color="inherit" onClick={this.handleClickOpen}>Ranks</Button>
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Manage Ranks</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Only players whose rank is ticked here can be added to the table
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogContent>
+                        <List>
+                            {this.state.ranks.map((rank) =>
+                                <ListItem key={rank.id} dense button onClick={this.handleToggle(rank)}>
+                                    <Avatar alt={rank.name} src={rank.icon} style={{width: 20, height: 20}}/>
+                                    <ListItemText primary={rank.name}/>
+                                    <Checkbox checked={this.state.ranks[this.state.ranks.indexOf(rank)].enabled === true}/>
+                                </ListItem>
+                            )}
+                        </List>
+                    </DialogContent>
+                    <DialogActions>
+                        <ApplyRanksButton enabledRanks={this.state.ranks}/>
+                        <Button onClick={this.handleClose} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+}
+
+class ApplyRanksButton extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            disabled: false,
+            text: "Apply"
+        };
+    }
+
+    applyRanks() {
+        this.setState({
+            disabled: true,
+            text: "Applying Ranks..."
+        });
+        fetch(backendUrl + "/ranks/enable", {
+            method: "POST",
+            body: JSON.stringify(this.props.enabledRanks)
+        })
+            .then(() => {
+                window.location.reload();
+            });
+    }
+
+    render() {
+        return (
+            <Button id="applyRanks"
+                    color="primary"
+                    onClick={() => this.applyRanks(this.props.ranks)}
+                    disabled={this.state.disabled}>{this.state.text}</Button>
+        );
+    }
+}
+
 class RemovePlayerButton extends React.Component {
     constructor(props) {
         super(props);
@@ -467,6 +588,7 @@ class MountButtons extends React.Component {
                 <div className="rows">
                     <AddPlayer/>
                     <AddMount/>
+                    <Ranks/>
                 </div>;
         } else {
             content = <div/>;
