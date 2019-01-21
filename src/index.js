@@ -22,12 +22,12 @@ import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
-import DialogContentText from "@material-ui/core/es/DialogContentText/DialogContentText";
+import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/es/ListItem/ListItem";
-import Checkbox from "@material-ui/core/es/Checkbox/Checkbox";
-import ListItemText from "@material-ui/core/es/ListItemText/ListItemText";
-import Avatar from "@material-ui/core/es/Avatar/Avatar";
+import ListItem from "@material-ui/core/ListItem/ListItem";
+import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import Avatar from "@material-ui/core/Avatar/Avatar";
 
 class MessageWindow extends React.Component {
     constructor(props) {
@@ -588,7 +588,7 @@ class MountButtons extends React.Component {
                 <div className="rows">
                     <AddPlayer/>
                     <AddMount/>
-                    {/*<Ranks/>*/}
+                    <Ranks/>
                 </div>;
         } else {
             content = <div/>;
