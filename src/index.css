@@ -11,6 +11,10 @@ td, th {
     text-align: right;
 }
 
+.react-grid-Cell {
+    border: 1px solid rgba(224, 224, 224, 1);
+}
+
 .backdrop {
     position: fixed;
     top: 0;
@@ -30,7 +34,7 @@ td, th {
     padding: 20px;
 }
 
-p {
+p, .react-grid-HeaderCell, .react-grid-Cell {
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     color: rgba(0, 0, 0, 0.87);
     font-size: 0.8125rem;

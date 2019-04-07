@@ -5,6 +5,7 @@ import './index.css';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import NavBar from './NavBar'
 import Videos, {VideoButtons} from './videos'
+import Minions from './minions'
 import TableCell from "@material-ui/core/TableCell";
 import {withStyles} from "@material-ui/core";
 import Button from "@material-ui/core/Button/Button";
@@ -151,7 +152,7 @@ class AddPlayerButton extends React.Component {
             disabled: true,
             text: "Adding Player..."
         });
-        fetch(backendUrl + "/addPlayer?playerId=" + this.props.player)
+        fetch(backendUrl + "/players/add?playerId=" + this.props.player, {method: 'POST'})
             .then(() => {
                 window.location.reload();
             });
@@ -179,7 +180,7 @@ class AddMount extends React.Component {
     }
 
     componentWillMount() {
-        fetch(backendUrl + '/listAvailableMounts')
+        fetch(backendUrl + '/mounts/available')
             .then(results => {
                 return results.json();
             })
@@ -266,7 +267,7 @@ class AddMountButton extends React.Component {
             disabled: true,
             text: "Adding Mount..."
         });
-        fetch(backendUrl + "/addMount?name=" + this.props.mountName)
+        fetch(backendUrl + "/mounts/add?name=" + this.props.mountName, {method: 'POST'})
             .then(() => {
                 window.location.reload();
             });
@@ -379,7 +380,7 @@ class ApplyRanksButton extends React.Component {
             text: "Applying Ranks..."
         });
         fetch(backendUrl + "/ranks/enable", {
-            method: "POST",
+            method: "PUT",
             body: JSON.stringify(this.props.enabledRanks)
         })
             .then(() => {
@@ -413,7 +414,7 @@ class RemovePlayerButton extends React.Component {
             disabled: true,
             messageWindowIsOpen: true
         });
-        fetch(backendUrl + "/removePlayer?playerName=" + name)
+        fetch(backendUrl + "/players/remove?playerName=" + name, {method: 'GET'})
             .then(() => {
                 window.location.reload();
             });
@@ -449,7 +450,7 @@ class RemoveMountButton extends React.Component {
             disabled: true,
             messageWindowIsOpen: true
         });
-        fetch(backendUrl + "/removeMount?id=" + mount.id)
+        fetch(backendUrl + "/mounts/remove?id=" + mount.id, {method: 'DELETE'})
             .then(() => {
                 window.location.reload();
             });
@@ -490,14 +491,14 @@ class Mounts extends React.Component {
 
 
     componentWillMount() {
-        fetch(backendUrl + '/listMounts')
+        fetch(backendUrl + '/mounts')
             .then(results => {
                 return results.json();
             })
             .then(data => {
                 this.setState({
                     updated: data.lastUpdated,
-                    columns: data.columns,
+                    columns: data.numColumns,
                     players: data.players
                 });
                 console.log("listMounts", this.state.players);
@@ -612,6 +613,7 @@ class Main extends React.Component {
                 </NavBar>
                 <Switch>
                     <Route exact path="/" component={Mounts}/>
+                    <Route exact path="/minions" component={Minions}/>
                     <Route path="/videos" component={Videos}/>
                 </Switch>
             </div>
