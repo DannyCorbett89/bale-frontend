@@ -450,7 +450,7 @@ class RemoveMountButton extends React.Component {
             disabled: true,
             messageWindowIsOpen: true
         });
-        fetch(backendUrl + "/mounts/remove?id=" + mount.id, {method: 'DELETE'})
+        fetch(backendUrl + "/mounts/remove?id=" + mount.id, {method: 'GET'})
             .then(() => {
                 window.location.reload();
             });
