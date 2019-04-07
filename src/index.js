@@ -380,7 +380,7 @@ class ApplyRanksButton extends React.Component {
             text: "Applying Ranks..."
         });
         fetch(backendUrl + "/ranks/enable", {
-            method: "PUT",
+            method: "POST",
             body: JSON.stringify(this.props.enabledRanks)
         })
             .then(() => {
