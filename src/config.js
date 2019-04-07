@@ -1,1 +1,1 @@
-export const backendUrl = 'http://192.168.1.22:8081';
+export const backendUrl = 'http://www.bahamutslegion.com:8081';
