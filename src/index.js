@@ -88,10 +88,12 @@ class AddPlayer extends React.Component {
                 return results.json();
             })
             .then(data => {
-                this.setState({
-                    players: data,
-                    value: data[0].id
-                });
+                if(data.length > 0) {
+                    this.setState({
+                        players: data,
+                        value: data[0].id
+                    });
+                }
                 console.log("players", this.state.players);
             })
     }
@@ -109,6 +111,21 @@ class AddPlayer extends React.Component {
     };
 
     render() {
+        let dropdown;
+
+        if(this.state.players.length > 0) {
+            dropdown = <Select onChange={this.handleChange}
+                               value={this.state.value}>
+                {this.state.players.map((player) =>
+                    <MenuItem key={player.id} value={player.id}>{player.name}</MenuItem>
+                )}
+            </Select>;
+        } else {
+            dropdown =
+                <DialogContentText>
+                    No more players are available to add
+                </DialogContentText>;
+        }
         return (
             <div className="row">
                 <Button color="inherit" onClick={this.handleClickOpen}>Add Player</Button>
@@ -119,15 +136,10 @@ class AddPlayer extends React.Component {
                 >
                     <DialogTitle id="form-dialog-title">Add Player</DialogTitle>
                     <DialogContent>
-                        <Select onChange={this.handleChange}
-                                value={this.state.value}>
-                            {this.state.players.map((player) =>
-                                <MenuItem key={player.id} value={player.id}>{player.name}</MenuItem>
-                            )}
-                        </Select>
+                        {dropdown}
                     </DialogContent>
                     <DialogActions>
-                        <AddPlayerButton player={this.state.value}/>
+                        <AddPlayerButton player={this.state.value} numPlayers={this.state.players.length}/>
                         <Button onClick={this.handleClose} color="primary">
                             Close
                         </Button>
@@ -141,10 +153,17 @@ class AddPlayer extends React.Component {
 class AddPlayerButton extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            disabled: false,
-            text: "Add"
-        };
+        if(props.numPlayers > 0) {
+            this.state = {
+                disabled: false,
+                text: "Add"
+            };
+        } else {
+            this.state = {
+                disabled: true,
+                text: "Add"
+            };
+        }
     }
 
     addPlayer() {
