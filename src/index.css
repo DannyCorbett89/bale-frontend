@@ -47,6 +47,15 @@ a {
     text-decoration: none;
 }
 
-.rows .row {
+.titleButtons .titleButton {
     display: inline-block;
+}
+
+.react-grid-Grid { min-height: calc( 100vh - 120px ) !important; }
+
+div[value=""]{
+    background-color: #D2FFD2;
+}
+div[value="X"]{
+    background-color: #FFAFAF;
 }

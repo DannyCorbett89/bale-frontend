@@ -127,7 +127,7 @@ class AddPlayer extends React.Component {
                 </DialogContentText>;
         }
         return (
-            <div className="row">
+            <div className="titleButton">
                 <Button color="inherit" onClick={this.handleClickOpen}>Add Player</Button>
                 <Dialog
                     open={this.state.open}
@@ -264,7 +264,7 @@ class AddMount extends React.Component {
         }
 
         return (
-            <div className="row">
+            <div className="titleButton">
                 <Button color="inherit" onClick={this.handleClickOpen}>Add Mount</Button>
                 {window}
             </div>
@@ -348,7 +348,7 @@ class Ranks extends React.Component {
 
     render() {
         return (
-            <div className="row">
+            <div className="titleButton">
                 <Button color="inherit" onClick={this.handleClickOpen}>Ranks</Button>
                 <Dialog
                     open={this.state.open}
@@ -605,7 +605,7 @@ class MountButtons extends React.Component {
 
         if (page === "/") {
             content =
-                <div className="rows">
+                <div className="titleButtons">
                     <AddPlayer/>
                     <AddMount/>
                     <Ranks/>

@@ -5,6 +5,7 @@ import {isMobile} from "react-device-detect";
 import Paper from "@material-ui/core/Paper";
 import ReactDataGrid from 'react-data-grid';
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.css';
 
 class Minions extends React.Component {
     constructor(props) {
