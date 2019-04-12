@@ -7,6 +7,20 @@ import ReactDataGrid from 'react-data-grid';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
+function getCellActions(column, row) {
+    const cellActions = {
+        name: [
+            {
+                icon: <span className="glyphicon glyphicon-link" />,
+                callback: () => {
+                    window.open('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/' + row.id, '_blank');
+                }
+            }
+        ]
+    };
+    return cellActions[column.key];
+}
+
 class Minions extends React.Component {
     constructor(props) {
         super(props);
@@ -50,7 +64,8 @@ class Minions extends React.Component {
             table = <ReactDataGrid columns={this.state.columns}
                                    rowGetter={i => this.state.players[i]}
                                    rowsCount={this.state.numRows}
-                                   enableCellSelect={true}/>;
+                                   enableCellSelect={true}
+                                   getCellActions={getCellActions}/>;
 
             updated = <p>Last Updated: {this.state.updated}</p>;
         }
@@ -67,6 +82,7 @@ class Minions extends React.Component {
             result =
                 <div>
                     {table}
+                    <br/>
                     {updated}
                 </div>;
         }
