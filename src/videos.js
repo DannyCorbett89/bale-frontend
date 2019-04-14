@@ -32,7 +32,7 @@ class Videos extends React.Component {
             width: '320'
         };
         return (
-            <div>
+            <div className="maincontent">
                 <p>BaLe</p>
                 <YouTube opts={opts} videoId="X1SkQQF6YaU"/> {/* Bale Intro */}
                 <YouTube opts={opts} videoId="7CeTW1dVg7A"/> {/* Return to T9 */}

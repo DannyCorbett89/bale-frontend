@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Switch} from "react-router-dom";
 import NavBar from './NavBar'
 import Videos, {VideoButtons} from './videos'
 import Minions from './minions'
+import Info from './info'
 import TableCell from "@material-ui/core/TableCell";
 import {withStyles} from "@material-ui/core";
 import Button from "@material-ui/core/Button/Button";
@@ -150,6 +151,99 @@ class AddPlayer extends React.Component {
     }
 }
 
+class RemovePlayer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+            players: [],
+            value: ''
+        };
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentWillMount() {
+        fetch(backendUrl + '/players/visible')
+            .then(results => {
+                return results.json();
+            })
+            .then(data => {
+                if(data.length > 0) {
+                    this.setState({
+                        players: data,
+                        value: data[0].id
+                    });
+                }
+                console.log("visiblePlayers", this.state.players);
+            })
+    }
+
+    handleChange(event) {
+        this.setState({value: event.target.value});
+    }
+
+    handleClickOpen = () => {
+        this.setState({open: true});
+    };
+
+    handleClose = () => {
+        this.setState({open: false});
+    };
+
+    handleToggle = player => () => {
+        let newPlayers = this.state.players;
+        const index = newPlayers.indexOf(player);
+
+        newPlayers[index].visible = !newPlayers[index].visible;
+        newPlayers[index].enabled = !newPlayers[index].enabled;
+
+        this.setState({
+            players: newPlayers
+        });
+    };
+
+    render() {
+        let dropdown;
+
+        if(this.state.players.length > 0) {
+            dropdown = <List>
+                    {this.state.players.map((player) =>
+                        <ListItem key={player.id} dense button onClick={this.handleToggle(player)}>
+                            <ListItemText primary={player.name}/>
+                            <Checkbox checked={this.state.players[this.state.players.indexOf(player)].enabled === true}/>
+                        </ListItem>
+                    )}
+                </List>;
+        } else {
+            dropdown =
+                <DialogContentText>
+                    No players are available to remove
+                </DialogContentText>;
+        }
+        return (
+            <div className="titleButton">
+                <Button color="inherit" onClick={this.handleClickOpen}>Remove Player</Button>
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Remove Player</DialogTitle>
+                    <DialogContent>
+                        {dropdown}
+                    </DialogContent>
+                    <DialogActions>
+                        <RemovePlayerButton2 players={this.state.players}/>
+                        <Button onClick={this.handleClose} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+}
+
 class AddPlayerButton extends React.Component {
     constructor(props) {
         super(props);
@@ -182,6 +276,42 @@ class AddPlayerButton extends React.Component {
             <Button id={this.props.player}
                     color="primary"
                     onClick={() => this.addPlayer(this.props.player)}
+                    disabled={this.state.disabled}>{this.state.text}</Button>
+        );
+    }
+}
+
+class RemovePlayerButton2 extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            disabled: false,
+            text: "Remove"
+        };
+    }
+
+    applyVisibility() {
+        this.setState({
+            disabled: true,
+            text: "Removing Players..."
+        });
+        fetch(backendUrl + "/players/visible", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.props.players)
+        })
+            .then(() => {
+                window.location.reload();
+            });
+    }
+
+    render() {
+        return (
+            <Button id="removePlayers"
+                    color="primary"
+                    onClick={() => this.applyVisibility(this.props.players)}
                     disabled={this.state.disabled}>{this.state.text}</Button>
         );
     }
@@ -246,7 +376,7 @@ class AddMount extends React.Component {
             >
                 <DialogTitle id="form-dialog-title">Add Mount</DialogTitle>
                 <DialogContent>
-                    <InputLabel>Mount </InputLabel>
+                    <InputLabel>Mount&nbsp;</InputLabel>
                     <Select onChange={this.handleMountChange}
                             value={this.state.mountName}>
                         {this.state.mounts.map((mount) =>
@@ -400,6 +530,9 @@ class ApplyRanksButton extends React.Component {
         });
         fetch(backendUrl + "/ranks/enable", {
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(this.props.enabledRanks)
         })
             .then(() => {
@@ -433,7 +566,7 @@ class RemovePlayerButton extends React.Component {
             disabled: true,
             messageWindowIsOpen: true
         });
-        fetch(backendUrl + "/players/remove?playerName=" + name, {method: 'GET'})
+        fetch(backendUrl + "/players/remove?name=" + name, {method: 'DELETE'})
             .then(() => {
                 window.location.reload();
             });
@@ -469,7 +602,7 @@ class RemoveMountButton extends React.Component {
             disabled: true,
             messageWindowIsOpen: true
         });
-        fetch(backendUrl + "/mounts/remove?id=" + mount.id, {method: 'GET'})
+        fetch(backendUrl + "/mounts/remove?id=" + mount.id, {method: 'DELETE'})
             .then(() => {
                 window.location.reload();
             });
@@ -610,6 +743,13 @@ class MountButtons extends React.Component {
                     <AddMount/>
                     <Ranks/>
                 </div>;
+        } else if (page === "/minions") {
+            content =
+                <div className="titleButtons">
+                    <AddPlayer/>
+                    <RemovePlayer/>
+                    <Ranks/>
+                </div>;
         } else {
             content = <div/>;
         }
@@ -632,8 +772,9 @@ class Main extends React.Component {
                 </NavBar>
                 <Switch>
                     <Route exact path="/" component={Mounts}/>
-                    <Route exact path="/minions" component={Minions}/>
+                    <Route path="/minions" component={Minions}/>
                     <Route path="/videos" component={Videos}/>
+                    <Route path="/info" component={Info}/>
                 </Switch>
             </div>
         );

@@ -11,7 +11,7 @@ function getCellActions(column, row) {
     const cellActions = {
         name: [
             {
-                icon: <span className="glyphicon glyphicon-link" />,
+                icon: <span className="glyphicon glyphicon-link"/>,
                 callback: () => {
                     window.open('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/' + row.id, '_blank');
                 }

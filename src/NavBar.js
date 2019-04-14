@@ -10,7 +10,6 @@ import Drawer from "@material-ui/core/Drawer/Drawer";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import {Link} from "react-router-dom";
-import Avatar from "@material-ui/core/Avatar";
 
 const styles = {
     root: {
@@ -60,6 +59,9 @@ class NavBar extends React.Component {
                             >
                                 <div className={classes.list}>
                                     <List component="nav">
+                                        <ListItem button>
+                                            <Link to="/info">Information</Link>
+                                        </ListItem>
                                         <ListItem button>
                                             <Link to="/">Mounts</Link>
                                         </ListItem>
