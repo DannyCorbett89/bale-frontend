@@ -59,9 +59,9 @@ class NavBar extends React.Component {
                             >
                                 <div className={classes.list}>
                                     <List component="nav">
-                                        <ListItem button>
-                                            <Link to="/info">Information</Link>
-                                        </ListItem>
+                                        {/*<ListItem button>*/}
+                                        {/*    <Link to="/info">Information</Link>*/}
+                                        {/*</ListItem>*/}
                                         <ListItem button>
                                             <Link to="/">Mounts</Link>
                                         </ListItem>

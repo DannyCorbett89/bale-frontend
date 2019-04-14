@@ -5,7 +5,6 @@ export class InfoButtons extends React.Component {
     render() {
         return (
             <div className="titleButtons">
-                <p> test </p>
             </div>
         );
     }
