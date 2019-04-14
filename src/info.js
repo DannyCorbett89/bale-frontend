@@ -1,6 +1,16 @@
 import React from 'react';
 import './index.css';
 
+export class InfoButtons extends React.Component {
+    render() {
+        return (
+            <div className="titleButtons">
+                <p> test </p>
+            </div>
+        );
+    }
+}
+
 class Info extends React.Component {
     render() {
         return (

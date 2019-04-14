@@ -4,22 +4,9 @@ import YouTube from "react-youtube";
 
 export class VideoButtons extends React.Component {
     render() {
-        let content;
-        const url = window.location.href;
-        const page = url.substr(url.lastIndexOf("/"));
-
-        if (page === "/videos") {
-            content =
-                <div className="rows">
-                    {/*<Button color="inherit">Add Video</Button>*/}
-                </div>;
-        } else {
-            content = <div/>;
-        }
-
         return (
-            <div>
-                {content}
+            <div className="titleButtons">
+                {/*<Button color="inherit">Add Video</Button>*/}
             </div>
         );
     }

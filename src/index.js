@@ -6,7 +6,7 @@ import {BrowserRouter, Route, Switch} from "react-router-dom";
 import NavBar from './NavBar'
 import Videos, {VideoButtons} from './videos'
 import Minions from './minions'
-import Info from './info'
+import Info, {InfoButtons} from './info'
 import TableCell from "@material-ui/core/TableCell";
 import {withStyles} from "@material-ui/core";
 import Button from "@material-ui/core/Button/Button";
@@ -730,40 +730,47 @@ class Mounts extends React.Component {
     }
 }
 
+class MountButtons extends React.Component {
+    render() {
+        return (
+            <div className="titleButtons">
+                <AddPlayer/>
+                <AddMount/>
+                <Ranks/>
+            </div>
+        );
+    }
+}
+
+class MinionButtons extends React.Component {
+    render() {
+        return (
+            <div className="titleButtons">
+                 <AddPlayer/>
+                 <RemovePlayer/>
+                 <Ranks/>
+            </div>
+        );
+    }
+}
+
 class Main extends React.Component {
     render() {
-        let content;
-        const url = window.location.href;
-        const page = url.substr(url.lastIndexOf("/"));
-
-        if (page === "/") {
-            content =
-                <div className="titleButtons">
-                    <AddPlayer/>
-                    <AddMount/>
-                    <Ranks/>
-                </div>;
-        } else if (page === "/minions") {
-            content =
-                <div className="titleButtons">
-                    <AddPlayer/>
-                    <RemovePlayer/>
-                    <Ranks/>
-                </div>;
-        } else {
-            content = <div/>;
-        }
         return (
             <div>
                 <NavBar>
-                    {content}
-                    <VideoButtons/>
+                    <Switch>
+                        <Route exact path="/" component={MountButtons}/>
+                        <Route exact path="/minions" component={MinionButtons}/>
+                        <Route exact path="/videos" component={VideoButtons}/>
+                        <Route exact path="/info" component={InfoButtons}/>
+                    </Switch>
                 </NavBar>
                 <Switch>
                     <Route exact path="/" component={Mounts}/>
-                    <Route path="/minions" component={Minions}/>
-                    <Route path="/videos" component={Videos}/>
-                    <Route path="/info" component={Info}/>
+                    <Route exact path="/minions" component={Minions}/>
+                    <Route exact path="/videos" component={Videos}/>
+                    <Route exact path="/info" component={Info}/>
                 </Switch>
             </div>
         );
