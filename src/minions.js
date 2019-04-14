@@ -13,7 +13,7 @@ function getCellActions(column, row) {
             {
                 icon: <span className="glyphicon glyphicon-link"/>,
                 callback: () => {
-                    window.open('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/' + row.id, '_blank');
+                    window.open('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/' + row.lodestoneId, '_blank');
                 }
             }
         ]
@@ -54,7 +54,7 @@ class Minions extends React.Component {
         let updated;
 
         if (this.state.updated == null) {
-            table = <div>
+            table = <div className="maincontent">
                 <p align="center">Loading minions...</p>
                 <LinearProgress/>
             </div>
