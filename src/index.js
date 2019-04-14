@@ -730,7 +730,7 @@ class Mounts extends React.Component {
     }
 }
 
-class MountButtons extends React.Component {
+class Main extends React.Component {
     render() {
         let content;
         const url = window.location.href;
@@ -753,21 +753,10 @@ class MountButtons extends React.Component {
         } else {
             content = <div/>;
         }
-
-        return (
-            <div>
-                {content}
-            </div>
-        );
-    }
-}
-
-class Main extends React.Component {
-    render() {
         return (
             <div>
                 <NavBar>
-                    <MountButtons/>
+                    {content}
                     <VideoButtons/>
                 </NavBar>
                 <Switch>
