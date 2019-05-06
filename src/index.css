@@ -8,7 +8,7 @@ tr.highlight {
     background-color: white;
 }
 
-tr.highlight:hover {
+tr.highlight:hover, .react-grid-Row:hover {
     background-color: #fffcaa;
 }
 
