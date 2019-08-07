@@ -12,8 +12,6 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import Select from "@material-ui/core/Select/Select";
-import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import Paper from "@material-ui/core/Paper/Paper";
 import {isMobile} from "react-device-detect";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -24,6 +22,10 @@ import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import Avatar from "@material-ui/core/Avatar/Avatar";
 import ReactDataGrid from "react-data-grid";
+import Table from "@material-ui/core/Table";
+import {TableRow} from "@material-ui/core";
+import TableCell from "@material-ui/core/TableCell";
+import TableBody from "@material-ui/core/TableBody";
 
 class AddPlayer extends React.Component {
     constructor(props) {
@@ -31,29 +33,41 @@ class AddPlayer extends React.Component {
         this.state = {
             open: false,
             players: [],
-            value: ''
+            filteredPlayers: [],
+            ranks: [],
+            enabledRanks: [],
+            buttonEnabled: false
         };
-        this.handleChange = this.handleChange.bind(this);
     }
 
-    componentWillMount() {
-        fetch(backendUrl + '/players')
+    componentDidMount() {
+        fetch(backendUrl + '/ranks')
             .then(results => {
                 return results.json();
             })
-            .then(data => {
-                if(data.length > 0) {
-                    this.setState({
-                        players: data,
-                        value: data[0].id
-                    });
+            .then(rankData => {
+                if(rankData.length > 0) {
+                    fetch(backendUrl + '/players')
+                        .then(results => {
+                            return results.json();
+                        })
+                        .then(playerData => {
+                            if(playerData.length > 0) {
+                                let filteredRanks = rankData.filter((rank) => rank.enabled === true).map((rank) => rank.id);
+                                let filteredPlayers = playerData.filter((player) => filteredRanks.filter((rank) => rank === player.rank.id).length > 0);
+                                this.setState({
+                                    players: playerData,
+                                    filteredPlayers: filteredPlayers,
+                                    ranks: rankData,
+                                    enabledRanks: filteredRanks
+                                });
+                            }
+                            console.log("players that can be added", this.state.filteredPlayers);
+                            console.log("visible ranks", this.state.enabledRanks);
+                            console.log("ranks", this.state.ranks);
+                        });
                 }
-                console.log("players", this.state.players);
-            })
-    }
-
-    handleChange(event) {
-        this.setState({value: event.target.value});
+            });
     }
 
     handleClickOpen = () => {
@@ -64,25 +78,38 @@ class AddPlayer extends React.Component {
         this.setState({open: false});
     };
 
-    render() {
-        let dropdown;
+    handleToggleRank = rank => () => {
+        let newRanks = this.state.ranks;
+        const index = newRanks.indexOf(rank);
 
-        if(this.state.players.length > 0) {
-            dropdown = <Select onChange={this.handleChange}
-                               value={this.state.value}>
-                {this.state.players.map((player) =>
-                    <MenuItem key={player.id} value={player.id}>{player.name}</MenuItem>
-                )}
-            </Select>;
-        } else {
-            dropdown =
-                <DialogContentText>
-                    No more players are available to add
-                </DialogContentText>;
-        }
+        newRanks[index].enabled = !newRanks[index].enabled;
+
+        let filteredRanks = newRanks.filter((rank) => rank.enabled === true).map((rank) => rank.id);
+
+        this.setState({
+            ranks: newRanks,
+            enabledRanks: filteredRanks,
+            filteredPlayers: this.state.players.filter((player) => filteredRanks.filter((rank) => rank === player.rank.id).length > 0)
+        });
+    };
+
+    handleTogglePlayer = player => () => {
+        let newPlayers = this.state.filteredPlayers;
+        const index = newPlayers.indexOf(player);
+
+        newPlayers[index].visible = !newPlayers[index].visible;
+        let anyVisiblePlayers = newPlayers.filter((player) => player.visible).length > 0;
+
+        this.setState({
+            filteredPlayers: newPlayers,
+            buttonEnabled: anyVisiblePlayers
+        });
+    };
+
+    render() {
         return (
             <div className="titleButton">
-                <Button color="inherit" onClick={this.handleClickOpen}>Add Player</Button>
+                <Button color="inherit" onClick={this.handleClickOpen}>Add Players</Button>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
@@ -90,10 +117,42 @@ class AddPlayer extends React.Component {
                 >
                     <DialogTitle id="form-dialog-title">Add Player</DialogTitle>
                     <DialogContent>
-                        {dropdown}
+                        <DialogContentText>
+                            Players that are visible here can be filtered down by rank, to make it easier to find people
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogContent>
+                        <Table>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell style={{ verticalAlign: 'top'}}>
+                                        <List>
+                                            {this.state.ranks.map((rank) =>
+                                                <ListItem key={rank.id} dense button onClick={this.handleToggleRank(rank)}>
+                                                    <Avatar alt={rank.name} src={rank.icon} style={{width: 20, height: 20}}/>
+                                                    <ListItemText primary={rank.name}/>
+                                                    <Checkbox checked={this.state.ranks[this.state.ranks.indexOf(rank)].enabled === true}/>
+                                                </ListItem>
+                                            )}
+                                        </List>
+                                    </TableCell>
+                                    <TableCell style={{ verticalAlign: 'top'}}>
+                                        <List>
+                                            {this.state.filteredPlayers.map((player) =>
+                                                <ListItem key={player.id} dense button onClick={this.handleTogglePlayer(player)}>
+                                                    <Avatar alt={player.name} src={player.icon} style={{width: 50, height: 50}}/>
+                                                    <ListItemText primary={player.name}/>
+                                                    <Checkbox checked={this.state.filteredPlayers[this.state.filteredPlayers.indexOf(player)].visible === true}/>
+                                                </ListItem>
+                                            )}
+                                        </List>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
                     </DialogContent>
                     <DialogActions>
-                        <AddPlayerButton player={this.state.value} numPlayers={this.state.players.length}/>
+                        <AddPlayerButton players={this.state.filteredPlayers} ranks={this.state.ranks} enabled={this.state.buttonEnabled} callback={this.props.callback}/>
                         <Button onClick={this.handleClose} color="primary">
                             Close
                         </Button>
@@ -162,6 +221,7 @@ class RemovePlayer extends React.Component {
             dropdown = <List>
                     {this.state.players.map((player) =>
                         <ListItem key={player.id} dense button onClick={this.handleToggle(player)}>
+                            <Avatar alt={player.name} src={player.icon} style={{width: 50, height: 50}}/>
                             <ListItemText primary={player.name}/>
                             <Checkbox checked={this.state.players[this.state.players.indexOf(player)].enabled === true}/>
                         </ListItem>
@@ -175,18 +235,18 @@ class RemovePlayer extends React.Component {
         }
         return (
             <div className="titleButton">
-                <Button color="inherit" onClick={this.handleClickOpen}>Remove Player</Button>
+                <Button color="inherit" onClick={this.handleClickOpen}>Remove Players</Button>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
                     aria-labelledby="form-dialog-title"
                 >
-                    <DialogTitle id="form-dialog-title">Remove Player</DialogTitle>
+                    <DialogTitle id="form-dialog-title">Remove Players</DialogTitle>
                     <DialogContent>
                         {dropdown}
                     </DialogContent>
                     <DialogActions>
-                        <RemovePlayerButton2 players={this.state.players}/>
+                        <RemovePlayerButton players={this.state.players} callback={this.props.callback}/>
                         <Button onClick={this.handleClose} color="primary">
                             Close
                         </Button>
@@ -200,17 +260,9 @@ class RemovePlayer extends React.Component {
 class AddPlayerButton extends React.Component {
     constructor(props) {
         super(props);
-        if(props.numPlayers > 0) {
-            this.state = {
-                disabled: false,
-                text: "Add"
-            };
-        } else {
-            this.state = {
-                disabled: true,
-                text: "Add"
-            };
-        }
+        this.state = {
+            text: "Add"
+        };
     }
 
     addPlayer() {
@@ -218,23 +270,33 @@ class AddPlayerButton extends React.Component {
             disabled: true,
             text: "Adding Player..."
         });
-        fetch(backendUrl + "/players/add?playerId=" + this.props.player, {method: 'POST'})
+        fetch(backendUrl + "/players/add?ids=" + this.props.players.filter((player) => player.visible).map((player) => player.id), {method: 'POST'})
             .then(() => {
-                window.location.reload();
+                fetch(backendUrl + "/ranks/enable", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(this.props.ranks)
+                })
+                    .then(() => {
+                        this.props.callback();
+                    });
             });
+
     }
 
     render() {
         return (
-            <Button id={this.props.player}
+            <Button id={this.props.players[0]}
                     color="primary"
-                    onClick={() => this.addPlayer(this.props.player)}
-                    disabled={this.state.disabled}>{this.state.text}</Button>
+                    onClick={() => this.addPlayer()}
+                    disabled={!this.props.enabled}>{this.state.text}</Button>
         );
     }
 }
 
-class RemovePlayerButton2 extends React.Component {
+class RemovePlayerButton extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -256,7 +318,7 @@ class RemovePlayerButton2 extends React.Component {
             body: JSON.stringify(this.props.players)
         })
             .then(() => {
-                window.location.reload();
+                this.props.callback();
             });
     }
 
@@ -270,136 +332,19 @@ class RemovePlayerButton2 extends React.Component {
     }
 }
 
-class Ranks extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: false,
-            ranks: []
-        };
-    }
-
-    componentWillMount() {
-        fetch(backendUrl + '/ranks')
-            .then(results => {
-                return results.json();
-            })
-            .then(data => {
-                this.setState({
-                    ranks: data
-                });
-                console.log("ranks", this.state.ranks);
-            })
-            .catch(error => {
-                console.log("Empty response for /ranks", error)
-            });
-    }
-
-    handleClickOpen = () => {
-        this.setState({open: true});
-    };
-
-    handleClose = () => {
-        this.setState({open: false});
-    };
-
-    handleToggle = rank => () => {
-        let newRanks = this.state.ranks;
-        const index = newRanks.indexOf(rank);
-
-        newRanks[index].enabled = !newRanks[index].enabled;
-
-        this.setState({
-            ranks: newRanks
-        });
-    };
-
-    render() {
-        return (
-            <div className="titleButton">
-                <Button color="inherit" onClick={this.handleClickOpen}>Ranks</Button>
-                <Dialog
-                    open={this.state.open}
-                    onClose={this.handleClose}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">Manage Ranks</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Only players whose rank is ticked here can be added to the table
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogContent>
-                        <List>
-                            {this.state.ranks.map((rank) =>
-                                <ListItem key={rank.id} dense button onClick={this.handleToggle(rank)}>
-                                    <Avatar alt={rank.name} src={rank.icon} style={{width: 20, height: 20}}/>
-                                    <ListItemText primary={rank.name}/>
-                                    <Checkbox checked={this.state.ranks[this.state.ranks.indexOf(rank)].enabled === true}/>
-                                </ListItem>
-                            )}
-                        </List>
-                    </DialogContent>
-                    <DialogActions>
-                        <ApplyRanksButton enabledRanks={this.state.ranks}/>
-                        <Button onClick={this.handleClose} color="primary">
-                            Close
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
-        );
-    }
-}
-
-class ApplyRanksButton extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            disabled: false,
-            text: "Apply"
-        };
-    }
-
-    applyRanks() {
-        this.setState({
-            disabled: true,
-            text: "Applying Ranks..."
-        });
-        fetch(backendUrl + "/ranks/enable", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.props.enabledRanks)
-        })
-            .then(() => {
-                window.location.reload();
-            });
-    }
-
-    render() {
-        return (
-            <Button id="applyRanks"
-                    color="primary"
-                    onClick={() => this.applyRanks(this.props.ranks)}
-                    disabled={this.state.disabled}>{this.state.text}</Button>
-        );
-    }
-}
-
 class Mounts extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             columns: [],
             players: [{mounts: []}],
-            numRows: 0
+            numRows: 0,
+            trigger: props.trigger
         };
     }
 
-
     componentWillMount() {
+        console.log("loading mounts");
         fetch(backendUrl + '/mounts')
             .then(results => {
                 return results.json();
@@ -462,12 +407,17 @@ class Mounts extends React.Component {
 }
 
 class MountButtons extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            triggerRender: 0
+        };
+    }
     render() {
         return (
             <div className="titleButtons">
-                <AddPlayer/>
-                <RemovePlayer/>
-                <Ranks/>
+                <AddPlayer callback={this.props.callback}/>
+                <RemovePlayer callback={this.props.callback}/>
             </div>
         );
     }
@@ -479,26 +429,39 @@ class MinionButtons extends React.Component {
             <div className="titleButtons">
                  <AddPlayer/>
                  <RemovePlayer/>
-                 <Ranks/>
             </div>
         );
     }
 }
 
 class Main extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            triggerRender: 0
+        };
+    }
+
+    handleCallback = () => {
+        this.setState({
+            triggerRender: this.state.triggerRender + 1
+        });
+        console.log("callback triggered");
+    };
+
     render() {
         return (
             <div>
                 <NavBar>
                     <Switch>
-                        <Route exact path="/" component={MountButtons}/>
+                        <Route exact path="/" component={() => <MountButtons callback={this.handleCallback}/>}/>
                         <Route exact path="/minions" component={MinionButtons}/>
                         <Route exact path="/videos" component={VideoButtons}/>
                         <Route exact path="/info" component={InfoButtons}/>
                     </Switch>
                 </NavBar>
                 <Switch>
-                    <Route exact path="/" component={Mounts}/>
+                    <Route exact path="/" component={() => <Mounts trigger={this.state.triggerRender}/>}/>
                     <Route exact path="/minions" component={Minions}/>
                     <Route exact path="/videos" component={Videos}/>
                     <Route exact path="/info" component={Info}/>
