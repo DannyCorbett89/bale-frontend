@@ -1,15 +1,8 @@
+## Pre-requesites
+The server running this application needs the following before it will work:
+- The [backend](https://github.com/DannyCorbett89/bale) application needs to be running
+- Docker and docker-compose need to be installed
 # Usage
-This is the frontend part of the BaLe application. It is a React application, start that up (in development mode) by running `npm start` from the `bale-frontend/src` directory
-
-Production is managed through docker. To deploy a production build, run this command:
-```
-docker-compose up -d --build
-```
-
-# Pre-requesites
-This application requires the backend service to be running, the location of which can be configured in `bale-frontend/src/config.js`
-
-Some React dependencies are needed for the frontend, which can be downloaded by running:
-```
-npm install
-```
+1. Edit [config.js](src/config.js) to contain the URL of the backend, including the port
+   - This must be a publically accessible URL or IP. If this application and the backend are both running on the same server, the internal (`192.168...`) IP will not work as it is the client's browser that makes the request, not the application on the host
+2. Run this command: `docker-compose up -d --build`
