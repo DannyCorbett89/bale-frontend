@@ -71,6 +71,9 @@ class NavBar extends React.Component {
                                         <ListItem button>
                                             <Link to="/videos">Videos</Link>
                                         </ListItem>
+                                        <ListItem button>
+                                            <Link to="/logs">Logs</Link>
+                                        </ListItem>
                                     </List>
                                 </div>
                             </div>

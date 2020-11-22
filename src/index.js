@@ -5,6 +5,7 @@ import './index.css';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import NavBar from './NavBar'
 import Videos, {VideoButtons} from './videos'
+import Logs, {LogsButtons} from './logs'
 import Minions from './minions'
 import Info, {InfoButtons} from './info'
 import Button from "@material-ui/core/Button/Button";
@@ -457,6 +458,7 @@ class Main extends React.Component {
                         <Route exact path="/" component={() => <MountButtons callback={this.handleCallback}/>}/>
                         <Route exact path="/minions" component={MinionButtons}/>
                         <Route exact path="/videos" component={VideoButtons}/>
+                        <Route exact path="/logs" component={LogsButtons}/>
                         <Route exact path="/info" component={InfoButtons}/>
                     </Switch>
                 </NavBar>
@@ -464,6 +466,7 @@ class Main extends React.Component {
                     <Route exact path="/" component={() => <Mounts trigger={this.state.triggerRender}/>}/>
                     <Route exact path="/minions" component={Minions}/>
                     <Route exact path="/videos" component={Videos}/>
+                    <Route exact path="/logs" component={Logs}/>
                     <Route exact path="/info" component={Info}/>
                 </Switch>
             </div>
