@@ -11,6 +11,7 @@
     "client-oauth2": "^4.3.3",
     "contentful": "^7.5.0",
     "graphql": "^15.4.0",
+    "moment": "^2.29.1",
     "prop-types": "latest",
     "react": "^16.8.6",
     "react-data-grid": "^6.1.0",
