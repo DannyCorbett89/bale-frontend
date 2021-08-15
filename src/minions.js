@@ -27,7 +27,8 @@ class Minions extends React.Component {
         this.state = {
             columns: [],
             players: [{mounts: []}],
-            numRows: 0
+            numRows: 0,
+            trigger: props.trigger
         };
     }
 

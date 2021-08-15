@@ -28,7 +28,7 @@ import {TableRow} from "@material-ui/core";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 
-class AddPlayer extends React.Component {
+class AddPlayerForMounts extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -48,7 +48,7 @@ class AddPlayer extends React.Component {
             })
             .then(rankData => {
                 if(rankData.length > 0) {
-                    fetch(backendUrl + '/players')
+                    fetch(backendUrl + '/mounts/players')
                         .then(results => {
                             return results.json();
                         })
@@ -98,8 +98,8 @@ class AddPlayer extends React.Component {
         let newPlayers = this.state.filteredPlayers;
         const index = newPlayers.indexOf(player);
 
-        newPlayers[index].visible = !newPlayers[index].visible;
-        let anyVisiblePlayers = newPlayers.filter((player) => player.visible).length > 0;
+        newPlayers[index].mountsVisible = !newPlayers[index].mountsVisible;
+        let anyVisiblePlayers = newPlayers.filter((player) => player.mountsVisible).length > 0;
 
         this.setState({
             filteredPlayers: newPlayers,
@@ -143,7 +143,7 @@ class AddPlayer extends React.Component {
                                                 <ListItem key={player.id} dense button onClick={this.handleTogglePlayer(player)}>
                                                     <Avatar alt={player.name} src={player.icon} style={{width: 50, height: 50}}/>
                                                     <ListItemText primary={player.name}/>
-                                                    <Checkbox checked={this.state.filteredPlayers[this.state.filteredPlayers.indexOf(player)].visible === true}/>
+                                                    <Checkbox checked={this.state.filteredPlayers[this.state.filteredPlayers.indexOf(player)].mountsVisible === true}/>
                                                 </ListItem>
                                             )}
                                         </List>
@@ -153,7 +153,7 @@ class AddPlayer extends React.Component {
                         </Table>
                     </DialogContent>
                     <DialogActions>
-                        <AddPlayerButton players={this.state.filteredPlayers} ranks={this.state.ranks} enabled={this.state.buttonEnabled} callback={this.props.callback}/>
+                        <AddPlayerForMountsButton players={this.state.filteredPlayers} ranks={this.state.ranks} enabled={this.state.buttonEnabled} callback={this.props.callback}/>
                         <Button onClick={this.handleClose} color="primary">
                             Close
                         </Button>
@@ -164,7 +164,7 @@ class AddPlayer extends React.Component {
     }
 }
 
-class RemovePlayer extends React.Component {
+class RemovePlayerForMounts extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -176,7 +176,7 @@ class RemovePlayer extends React.Component {
     }
 
     componentWillMount() {
-        fetch(backendUrl + '/players/visible')
+        fetch(backendUrl + '/mounts/players/visible')
             .then(results => {
                 return results.json();
             })
@@ -207,7 +207,7 @@ class RemovePlayer extends React.Component {
         let newPlayers = this.state.players;
         const index = newPlayers.indexOf(player);
 
-        newPlayers[index].visible = !newPlayers[index].visible;
+        newPlayers[index].mountsVisible = !newPlayers[index].mountsVisible;
         newPlayers[index].enabled = !newPlayers[index].enabled;
 
         this.setState({
@@ -220,14 +220,14 @@ class RemovePlayer extends React.Component {
 
         if(this.state.players.length > 0) {
             dropdown = <List>
-                    {this.state.players.map((player) =>
-                        <ListItem key={player.id} dense button onClick={this.handleToggle(player)}>
-                            <Avatar alt={player.name} src={player.icon} style={{width: 50, height: 50}}/>
-                            <ListItemText primary={player.name}/>
-                            <Checkbox checked={this.state.players[this.state.players.indexOf(player)].enabled === true}/>
-                        </ListItem>
-                    )}
-                </List>;
+                {this.state.players.map((player) =>
+                    <ListItem key={player.id} dense button onClick={this.handleToggle(player)}>
+                        <Avatar alt={player.name} src={player.icon} style={{width: 50, height: 50}}/>
+                        <ListItemText primary={player.name}/>
+                        <Checkbox checked={this.state.players[this.state.players.indexOf(player)].enabled === true}/>
+                    </ListItem>
+                )}
+            </List>;
         } else {
             dropdown =
                 <DialogContentText>
@@ -247,7 +247,7 @@ class RemovePlayer extends React.Component {
                         {dropdown}
                     </DialogContent>
                     <DialogActions>
-                        <RemovePlayerButton players={this.state.players} callback={this.props.callback}/>
+                        <RemovePlayerForMountsButton players={this.state.players} callback={this.props.callback}/>
                         <Button onClick={this.handleClose} color="primary">
                             Close
                         </Button>
@@ -258,7 +258,7 @@ class RemovePlayer extends React.Component {
     }
 }
 
-class AddPlayerButton extends React.Component {
+class AddPlayerForMountsButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -271,7 +271,7 @@ class AddPlayerButton extends React.Component {
             disabled: true,
             text: "Adding Player..."
         });
-        fetch(backendUrl + "/players/add?ids=" + this.props.players.filter((player) => player.visible).map((player) => player.id), {method: 'POST'})
+        fetch(backendUrl + "/mounts/players/add?ids=" + this.props.players.filter((player) => player.mountsVisible).map((player) => player.id), {method: 'POST'})
             .then(() => {
                 fetch(backendUrl + "/ranks/enable", {
                     method: "POST",
@@ -297,7 +297,7 @@ class AddPlayerButton extends React.Component {
     }
 }
 
-class RemovePlayerButton extends React.Component {
+class RemovePlayerForMountsButton extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -311,7 +311,312 @@ class RemovePlayerButton extends React.Component {
             disabled: true,
             text: "Removing Players..."
         });
-        fetch(backendUrl + "/players/visible", {
+        fetch(backendUrl + "/mounts/players/visible", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.props.players)
+        })
+            .then(() => {
+                this.props.callback();
+            });
+    }
+
+    render() {
+        return (
+            <Button id="removePlayers"
+                    color="primary"
+                    onClick={() => this.applyVisibility(this.props.players)}
+                    disabled={this.state.disabled}>{this.state.text}</Button>
+        );
+    }
+}
+
+class AddPlayerForMinions extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+            players: [],
+            filteredPlayers: [],
+            ranks: [],
+            enabledRanks: [],
+            buttonEnabled: false
+        };
+    }
+
+    componentDidMount() {
+        fetch(backendUrl + '/ranks')
+            .then(results => {
+                return results.json();
+            })
+            .then(rankData => {
+                if(rankData.length > 0) {
+                    fetch(backendUrl + '/minions/players')
+                        .then(results => {
+                            return results.json();
+                        })
+                        .then(playerData => {
+                            if(playerData.length > 0) {
+                                let filteredRanks = rankData.filter((rank) => rank.enabled === true).map((rank) => rank.id);
+                                let filteredPlayers = playerData.filter((player) => filteredRanks.filter((rank) => rank === player.rank.id).length > 0);
+                                this.setState({
+                                    players: playerData,
+                                    filteredPlayers: filteredPlayers,
+                                    ranks: rankData,
+                                    enabledRanks: filteredRanks
+                                });
+                            }
+                            console.log("players that can be added", this.state.filteredPlayers);
+                            console.log("visible ranks", this.state.enabledRanks);
+                            console.log("ranks", this.state.ranks);
+                        });
+                }
+            });
+    }
+
+    handleClickOpen = () => {
+        this.setState({open: true});
+    };
+
+    handleClose = () => {
+        this.setState({open: false});
+    };
+
+    handleToggleRank = rank => () => {
+        let newRanks = this.state.ranks;
+        const index = newRanks.indexOf(rank);
+
+        newRanks[index].enabled = !newRanks[index].enabled;
+
+        let filteredRanks = newRanks.filter((rank) => rank.enabled === true).map((rank) => rank.id);
+
+        this.setState({
+            ranks: newRanks,
+            enabledRanks: filteredRanks,
+            filteredPlayers: this.state.players.filter((player) => filteredRanks.filter((rank) => rank === player.rank.id).length > 0)
+        });
+    };
+
+    handleTogglePlayer = player => () => {
+        let newPlayers = this.state.filteredPlayers;
+        const index = newPlayers.indexOf(player);
+
+        newPlayers[index].minionsVisible = !newPlayers[index].minionsVisible;
+        let anyVisiblePlayers = newPlayers.filter((player) => player.minionsVisible).length > 0;
+
+        this.setState({
+            filteredPlayers: newPlayers,
+            buttonEnabled: anyVisiblePlayers
+        });
+    };
+
+    render() {
+        return (
+            <div className="titleButton">
+                <Button color="inherit" onClick={this.handleClickOpen}>Add Players</Button>
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Add Player</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Players that are visible here can be filtered down by rank, to make it easier to find people
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogContent>
+                        <Table>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell style={{ verticalAlign: 'top'}}>
+                                        <List>
+                                            {this.state.ranks.map((rank) =>
+                                                <ListItem key={rank.id} dense button onClick={this.handleToggleRank(rank)}>
+                                                    <Avatar alt={rank.name} src={rank.icon} style={{width: 20, height: 20}}/>
+                                                    <ListItemText primary={rank.name}/>
+                                                    <Checkbox checked={this.state.ranks[this.state.ranks.indexOf(rank)].enabled === true}/>
+                                                </ListItem>
+                                            )}
+                                        </List>
+                                    </TableCell>
+                                    <TableCell style={{ verticalAlign: 'top'}}>
+                                        <List>
+                                            {this.state.filteredPlayers.map((player) =>
+                                                <ListItem key={player.id} dense button onClick={this.handleTogglePlayer(player)}>
+                                                    <Avatar alt={player.name} src={player.icon} style={{width: 50, height: 50}}/>
+                                                    <ListItemText primary={player.name}/>
+                                                    <Checkbox checked={this.state.filteredPlayers[this.state.filteredPlayers.indexOf(player)].minionsVisible === true}/>
+                                                </ListItem>
+                                            )}
+                                        </List>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </DialogContent>
+                    <DialogActions>
+                        <AddPlayerForMinionsButton players={this.state.filteredPlayers} ranks={this.state.ranks} enabled={this.state.buttonEnabled} callback={this.props.callback}/>
+                        <Button onClick={this.handleClose} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+}
+
+class RemovePlayerForMinions extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+            players: [],
+            value: ''
+        };
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentWillMount() {
+        fetch(backendUrl + '/minions/players/visible')
+            .then(results => {
+                return results.json();
+            })
+            .then(data => {
+                if(data.length > 0) {
+                    this.setState({
+                        players: data,
+                        value: data[0].id
+                    });
+                }
+                console.log("visiblePlayers", this.state.players);
+            })
+    }
+
+    handleChange(event) {
+        this.setState({value: event.target.value});
+    }
+
+    handleClickOpen = () => {
+        this.setState({open: true});
+    };
+
+    handleClose = () => {
+        this.setState({open: false});
+    };
+
+    handleToggle = player => () => {
+        let newPlayers = this.state.players;
+        const index = newPlayers.indexOf(player);
+
+        newPlayers[index].minionsVisible = !newPlayers[index].minionsVisible;
+        newPlayers[index].enabled = !newPlayers[index].enabled;
+
+        this.setState({
+            players: newPlayers
+        });
+    };
+
+    render() {
+        let dropdown;
+
+        if(this.state.players.length > 0) {
+            dropdown = <List>
+                {this.state.players.map((player) =>
+                    <ListItem key={player.id} dense button onClick={this.handleToggle(player)}>
+                        <Avatar alt={player.name} src={player.icon} style={{width: 50, height: 50}}/>
+                        <ListItemText primary={player.name}/>
+                        <Checkbox checked={this.state.players[this.state.players.indexOf(player)].enabled === true}/>
+                    </ListItem>
+                )}
+            </List>;
+        } else {
+            dropdown =
+                <DialogContentText>
+                    No players are available to remove
+                </DialogContentText>;
+        }
+        return (
+            <div className="titleButton">
+                <Button color="inherit" onClick={this.handleClickOpen}>Remove Players</Button>
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Remove Players</DialogTitle>
+                    <DialogContent>
+                        {dropdown}
+                    </DialogContent>
+                    <DialogActions>
+                        <RemovePlayerForMinionsButton players={this.state.players} callback={this.props.callback}/>
+                        <Button onClick={this.handleClose} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+}
+
+class AddPlayerForMinionsButton extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            text: "Add"
+        };
+    }
+
+    addPlayer() {
+        this.setState({
+            disabled: true,
+            text: "Adding Player..."
+        });
+        fetch(backendUrl + "/minions/players/add?ids=" + this.props.players.filter((player) => player.minionsVisible).map((player) => player.id), {method: 'POST'})
+            .then(() => {
+                fetch(backendUrl + "/ranks/enable", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(this.props.ranks)
+                })
+                    .then(() => {
+                        this.props.callback();
+                    });
+            });
+
+    }
+
+    render() {
+        return (
+            <Button id={this.props.players[0]}
+                    color="primary"
+                    onClick={() => this.addPlayer()}
+                    disabled={!this.props.enabled}>{this.state.text}</Button>
+        );
+    }
+}
+
+class RemovePlayerForMinionsButton extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            disabled: false,
+            text: "Remove"
+        };
+    }
+
+    applyVisibility() {
+        this.setState({
+            disabled: true,
+            text: "Removing Players..."
+        });
+        fetch(backendUrl + "/minions/players/visible", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -417,8 +722,8 @@ class MountButtons extends React.Component {
     render() {
         return (
             <div className="titleButtons">
-                <AddPlayer callback={this.props.callback}/>
-                <RemovePlayer callback={this.props.callback}/>
+                <AddPlayerForMounts callback={this.props.callback}/>
+                <RemovePlayerForMounts callback={this.props.callback}/>
             </div>
         );
     }
@@ -428,8 +733,8 @@ class MinionButtons extends React.Component {
     render() {
         return (
             <div className="titleButtons">
-                 <AddPlayer/>
-                 <RemovePlayer/>
+                 <AddPlayerForMinions callback={this.props.callback}/>
+                 <RemovePlayerForMinions callback={this.props.callback}/>
             </div>
         );
     }
@@ -456,7 +761,7 @@ class Main extends React.Component {
                 <NavBar>
                     <Switch>
                         <Route exact path="/" component={() => <MountButtons callback={this.handleCallback}/>}/>
-                        <Route exact path="/minions" component={MinionButtons}/>
+                        <Route exact path="/minions" component={() => <MinionButtons callback={this.handleCallback}/>}/>
                         <Route exact path="/videos" component={VideoButtons}/>
                         <Route exact path="/logs" component={LogsButtons}/>
                         <Route exact path="/info" component={InfoButtons}/>
@@ -464,7 +769,7 @@ class Main extends React.Component {
                 </NavBar>
                 <Switch>
                     <Route exact path="/" component={() => <Mounts trigger={this.state.triggerRender}/>}/>
-                    <Route exact path="/minions" component={Minions}/>
+                    <Route exact path="/minions" component={() => <Minions trigger={this.state.triggerRender}/>}/>
                     <Route exact path="/videos" component={Videos}/>
                     <Route exact path="/logs" component={Logs}/>
                     <Route exact path="/info" component={Info}/>
