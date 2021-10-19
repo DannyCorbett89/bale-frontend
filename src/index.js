@@ -638,6 +638,17 @@ class RemovePlayerForMinionsButton extends React.Component {
     }
 }
 
+function PageForwarder() {
+    if(window.location.href.includes("dc-minecraft")) {
+        alert(window.location.href);
+        // window.location.href = "http://dc-minecraft:20000";
+    }
+
+    return (
+        <div/>
+    );
+}
+
 class Mounts extends React.Component {
     constructor(props) {
         super(props);
@@ -707,6 +718,7 @@ class Mounts extends React.Component {
         return (
             <div>
                 {result}
+                <PageForwarder/>
             </div>
         );
     }
