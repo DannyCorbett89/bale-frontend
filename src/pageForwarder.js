@@ -3,7 +3,7 @@ import './index.css';
 
 function PageForwarder() {
     if(window.location.href.startsWith("http://dc-minecraft.com/")) {
-        window.location.href = "http://dc-minecraft:20000/";
+        window.location.href = "http://dc-minecraft.com:20000/";
     }
 
     return (
