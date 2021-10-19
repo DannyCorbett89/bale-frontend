@@ -27,6 +27,7 @@ import Table from "@material-ui/core/Table";
 import {TableRow} from "@material-ui/core";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
+import PageForwarder from "./pageForwarder";
 
 class AddPlayerForMounts extends React.Component {
     constructor(props) {
@@ -636,17 +637,6 @@ class RemovePlayerForMinionsButton extends React.Component {
                     disabled={this.state.disabled}>{this.state.text}</Button>
         );
     }
-}
-
-function PageForwarder() {
-    if(window.location.href.includes("dc-minecraft")) {
-        alert(window.location.href);
-        // window.location.href = "http://dc-minecraft:20000";
-    }
-
-    return (
-        <div/>
-    );
 }
 
 class Mounts extends React.Component {

@@ -6,6 +6,7 @@ import {backendUrl} from "./config";
 import {isMobile} from "react-device-detect";
 import Paper from "@material-ui/core/Paper/Paper";
 import * as moment from 'moment'
+import PageForwarder from "./pageForwarder";
 
 const httpLink = createHttpLink({
     uri: 'https://www.fflogs.com/api/v2/client',
@@ -94,7 +95,10 @@ class LogsTable extends React.Component {
             </tbody>
         </table>;
 
-        return <MobileFriendly content={table}/>;
+        return <div>
+            <MobileFriendly content={table}/>
+            <PageForwarder/>
+        </div>;
     }
 }
 

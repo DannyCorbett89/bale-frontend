@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.css';
+import PageForwarder from "./pageForwarder";
 
 export class InfoButtons extends React.Component {
     render() {
@@ -46,6 +47,7 @@ class Info extends React.Component {
                 </p>
                 <h3>Actions rotation</h3>
                 <p>Helping Hand -> Earth and Water -> The Heat of Battle</p>
+                <PageForwarder/>
             </div>
         );
     }

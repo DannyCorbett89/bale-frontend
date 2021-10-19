@@ -6,6 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import ReactDataGrid from 'react-data-grid';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import PageForwarder from "./pageForwarder";
 
 function getCellActions(column, row) {
     const cellActions = {
@@ -91,6 +92,7 @@ class Minions extends React.Component {
         return (
             <div>
                 {result}
+                <PageForwarder/>
             </div>
         );
     }

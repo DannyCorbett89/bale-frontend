@@ -1,6 +1,7 @@
 import React from 'react';
 import './index.css';
 import YouTube from "react-youtube";
+import PageForwarder from "./pageForwarder";
 
 export class VideoButtons extends React.Component {
     render() {
@@ -52,6 +53,7 @@ class Videos extends React.Component {
                 <YouTube opts={opts} videoId="zZXjisXWBSU"/> {/* Samurai Skills */}
                 <YouTube opts={opts} videoId="IIec34LhKa0"/> {/* Kugane tower jump */}
                 <YouTube opts={opts} videoId="eAtbBKy2Mik"/> {/* Scullai Deaths */}
+                <PageForwarder/>
             </div>
         );
     }
