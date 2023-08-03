@@ -28,6 +28,7 @@ import {TableRow} from "@material-ui/core";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import PageForwarder from "./pageForwarder";
+import Schedule, {ScheduleButtons} from "./schedule";
 
 class AddPlayerForMounts extends React.Component {
     constructor(props) {
@@ -765,6 +766,7 @@ class Main extends React.Component {
                         <Route exact path="/" component={() => <MountButtons callback={this.handleCallback}/>}/>
                         <Route exact path="/minions" component={() => <MinionButtons callback={this.handleCallback}/>}/>
                         <Route exact path="/videos" component={VideoButtons}/>
+                        <Route exact path="/schedule" component={ScheduleButtons}/>
                         <Route exact path="/logs" component={LogsButtons}/>
                         <Route exact path="/info" component={InfoButtons}/>
                     </Switch>
@@ -773,6 +775,7 @@ class Main extends React.Component {
                     <Route exact path="/" component={() => <Mounts trigger={this.state.triggerRender}/>}/>
                     <Route exact path="/minions" component={() => <Minions trigger={this.state.triggerRender}/>}/>
                     <Route exact path="/videos" component={Videos}/>
+                    <Route exact path="/schedule" component={Schedule}/>
                     <Route exact path="/logs" component={Logs}/>
                     <Route exact path="/info" component={Info}/>
                 </Switch>

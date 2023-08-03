@@ -69,6 +69,9 @@ class NavBar extends React.Component {
                                             <Link to="/minions">Minions</Link>
                                         </ListItem>
                                         <ListItem button>
+                                            <Link to="/schedule">Schedule</Link>
+                                        </ListItem>
+                                        <ListItem button>
                                             <Link to="/videos">Videos</Link>
                                         </ListItem>
                                         <ListItem button>
