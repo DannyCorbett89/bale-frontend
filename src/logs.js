@@ -4,7 +4,7 @@ import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
 import {backendUrl} from "./config";
 import {isMobile} from "react-device-detect";
-import Paper from "@material-ui/core/Paper/Paper";
+import Paper from "@mui/material/Paper/Paper";
 import * as moment from 'moment'
 import PageForwarder from "./pageForwarder";
 

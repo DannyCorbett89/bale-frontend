@@ -1,8 +1,8 @@
 import React from 'react';
 import {backendUrl} from "./config";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 import {isMobile} from "react-device-detect";
-import Paper from "@material-ui/core/Paper";
+import Paper from "@mui/material/Paper";
 import ReactDataGrid from 'react-data-grid';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';

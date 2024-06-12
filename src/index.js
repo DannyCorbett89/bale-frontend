@@ -2,33 +2,36 @@ import {backendUrl} from "./config";
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import NavBar from './NavBar'
 import Videos, {VideoButtons} from './videos'
 import Logs, {LogsButtons} from './logs'
 import Minions from './minions'
 import Info, {InfoButtons} from './info'
-import Button from "@material-ui/core/Button/Button";
-import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import Paper from "@material-ui/core/Paper/Paper";
+import Button from "@mui/material/Button/Button";
+import Dialog from "@mui/material/Dialog/Dialog";
+import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
+import DialogContent from "@mui/material/DialogContent/DialogContent";
+import DialogActions from "@mui/material/DialogActions/DialogActions";
+import Paper from "@mui/material/Paper/Paper";
 import {isMobile} from "react-device-detect";
-import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
-import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem/ListItem";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText/ListItemText";
-import Avatar from "@material-ui/core/Avatar/Avatar";
+import LinearProgress from "@mui/material/LinearProgress/LinearProgress";
+import DialogContentText from "@mui/material/DialogContentText/DialogContentText";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem/ListItem";
+import Checkbox from "@mui/material/Checkbox/Checkbox";
+import ListItemText from "@mui/material/ListItemText/ListItemText";
+import Avatar from "@mui/material/Avatar/Avatar";
 import ReactDataGrid from "react-data-grid";
-import Table from "@material-ui/core/Table";
-import {TableRow} from "@material-ui/core";
-import TableCell from "@material-ui/core/TableCell";
-import TableBody from "@material-ui/core/TableBody";
+import Table from "@mui/material/Table";
+import {TableRow} from "@mui/material";
+import TableCell from "@mui/material/TableCell";
+import TableBody from "@mui/material/TableBody";
 import PageForwarder from "./pageForwarder";
 import Schedule, {ScheduleButtons} from "./schedule";
+import { ThemeProvider, createMuiTheme, makeStyles } from '@mui/material/styles';
+
+const theme = createMuiTheme();
 
 class AddPlayerForMounts extends React.Component {
     constructor(props) {
@@ -762,23 +765,23 @@ class Main extends React.Component {
         return (
             <div>
                 <NavBar>
-                    <Switch>
-                        <Route exact path="/" component={() => <MountButtons callback={this.handleCallback}/>}/>
-                        <Route exact path="/minions" component={() => <MinionButtons callback={this.handleCallback}/>}/>
-                        <Route exact path="/videos" component={VideoButtons}/>
-                        <Route exact path="/schedule" component={ScheduleButtons}/>
-                        <Route exact path="/logs" component={LogsButtons}/>
-                        <Route exact path="/info" component={InfoButtons}/>
-                    </Switch>
+                    <Routes>
+                        <Route exact path="/" element={<MountButtons callback={this.handleCallback}/>}/>
+                        <Route exact path="/minions" element={<MinionButtons callback={this.handleCallback}/>}/>
+                        <Route exact path="/videos" element={<VideoButtons/>}/>
+                        <Route exact path="/schedule" element={<ScheduleButtons/>}/>
+                        <Route exact path="/logs" element={<LogsButtons/>}/>
+                        <Route exact path="/info" element={<InfoButtons/>}/>
+                    </Routes>
                 </NavBar>
-                <Switch>
-                    <Route exact path="/" component={() => <Mounts trigger={this.state.triggerRender}/>}/>
-                    <Route exact path="/minions" component={() => <Minions trigger={this.state.triggerRender}/>}/>
-                    <Route exact path="/videos" component={Videos}/>
-                    <Route exact path="/schedule" component={Schedule}/>
-                    <Route exact path="/logs" component={Logs}/>
-                    <Route exact path="/info" component={Info}/>
-                </Switch>
+                <Routes>
+                    <Route exact path="/" element={<Mounts trigger={this.state.triggerRender}/>}/>
+                    <Route exact path="/minions" element={<Minions trigger={this.state.triggerRender}/>}/>
+                    <Route exact path="/videos" element={<Videos/>}/>
+                    <Route exact path="/schedule" element={<Schedule/>}/>
+                    <Route exact path="/logs" element={<Logs/>}/>
+                    <Route exact path="/info" element={<Info/>}/>
+                </Routes>
             </div>
         );
     }
@@ -788,5 +791,7 @@ class Main extends React.Component {
 
 ReactDOM.render(
     <BrowserRouter>
-        <Main/>
+        <ThemeProvider theme={theme}>
+            <Main/>
+        </ThemeProvider>
     </BrowserRouter>, document.getElementById("root"));

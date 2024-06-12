@@ -3,9 +3,9 @@ import './index.css';
 import Calendar from "@ericz1803/react-google-calendar";
 import PageForwarder from "./pageForwarder";
 import {isMobile} from "react-device-detect";
-import Paper from "@material-ui/core/Paper/Paper";
+import Paper from "@mui/material/Paper/Paper";
 import {css} from "@emotion/react";
-import Button from "@material-ui/core/Button/Button";
+import Button from "@mui/material/Button/Button";
 
 const apiKey = process.env.REACT_APP_CALENDAR_API_KEY;
 
