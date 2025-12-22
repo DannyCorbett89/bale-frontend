@@ -1,105 +1,13 @@
-.maincontent {
-    position: relative;
-    left: 20px;
-    top: 20px;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-tr.highlight {
-    background-color: white;
-}
-
-tr.highlight:hover, .react-grid-Row:hover {
-    background-color: #fffcaa;
-}
-
-td, th {
-    border: 1px solid rgba(224, 224, 224, 1);
-    text-align: right;
-}
-
-td.logs {
-    border: 1px solid rgba(224, 224, 224, 1);
-    text-align: left;
-    padding: 4px;
-}
-
-td.padded {
-    padding: 4px;
-}
-
-.react-grid-Cell {
-    border: 1px solid rgba(224, 224, 224, 1);
-}
-
-.backdrop {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    padding: 50px;
-}
-
-.modal {
-    background-color: #fff;
-    border-radius: 5px;
-    max-width: 200px;
-    min-height: 150px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-p, .react-grid-HeaderCell, .react-grid-Cell {
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    color: rgba(0, 0, 0, 0.87);
-    font-size: 0.8125rem;
-    font-weight: 400;
-}
-
-a {
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    color: black;
-    text-decoration: none;
-}
-
-.titleButtons .titleButton {
-    display: inline-block;
-}
-
-.react-grid-Grid { min-height: calc( 100vh - 130px ) !important; }
-
-div[value=""]{
-    background-color: #D2FFD2;
-}
-div[value="X"]{
-    background-color: #FFAFAF;
-}
-
-@font-face {
-    font-family: 'Glyphicons Halflings';
-
-    src: url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot');
-    src: url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
-    url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff2') format('woff2'),
-    url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff') format('woff'),
-    url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
-    url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
-}
-
-.glyphicon {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings', serif;
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.glyphicon-link:before {
-    content: "\e144";
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }

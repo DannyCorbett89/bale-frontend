@@ -1,0 +1,8 @@
+html, body {
+    height: 97%;
+}
+
+#root, #main, div.calendar, iframe {
+    width: 100%;
+    height: 100%;
+}
