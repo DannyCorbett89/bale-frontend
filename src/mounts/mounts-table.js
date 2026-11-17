@@ -52,6 +52,7 @@ function MountsTable() {
                        removeUrl="/mounts/players/remove"
                        collectUrl="https://ffxivcollect.com/mounts/"
                        reload={setLoading}
+                       canModifyPlayers={true}
             />
             <p>Last Updated: {lastUpdated}</p>
         </div>

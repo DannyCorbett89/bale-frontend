@@ -5,6 +5,7 @@ import MinionsTable from "./minions/minions-table";
 import Videos from "./videos";
 import Logs from "./logs";
 import Schedule from "./schedule";
+import SevenDaysPlayerSkills from "./seven-days";
 
 function Nav() {
     return (
@@ -16,6 +17,7 @@ function Nav() {
                 <Link to="/schedule">Schedule</Link>
                 <Link to="/videos">Videos</Link>
                 <Link to="/logs">Logs</Link>
+                <Link to="/seven-days">7 Days to Die</Link>
             </div>
 
 
@@ -29,6 +31,7 @@ function Nav() {
                     <Route path="/schedule" element={<Schedule/>}/>
                     <Route path="/videos" element={<Videos/>}/>
                     <Route path="/logs" element={<Logs/>}/>
+                    <Route path="/seven-days" element={<SevenDaysPlayerSkills/>}/>
                 </Routes>
             </div>
         </BrowserRouter>

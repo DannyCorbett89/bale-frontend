@@ -52,6 +52,7 @@ function MinionsTable() {
                        removeUrl="/minions/players/remove"
                        collectUrl="https://ffxivcollect.com/minions/"
                        reload={setLoading}
+                       canModifyPlayers={true}
             />
             <p>Last Updated: {lastUpdated}</p>
         </div>
