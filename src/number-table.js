@@ -15,13 +15,12 @@ function NumberTable(props) {
                     }
                 </tr>
                 {
-                    data.map(item => (
+                    data.map(skill => (
                         <tr>
-                            <td>{item.name}</td>
+                            <td>{skill.name}</td>
                             {
-                                item.players.map(player => (
+                                skill.players.map(player => (
                                     <td className={player.value === player.max ? "have" : ""}>{player.value}</td>
-                                    // <td className={player.value > 1 ? "have" : "need"}>{player.value}</td>
                                 ))
                             }
                         </tr>
