@@ -3,7 +3,7 @@ import './data-table.css';
 function NumberTable(props) {
     const {title, visiblePlayers, data} = props;
     return (
-        <div>
+        <div className="side-by-side">
             <table>
                 <tbody>
                 <tr>
@@ -20,7 +20,7 @@ function NumberTable(props) {
                             <td>{item.name}</td>
                             {
                                 item.players.map(player => (
-                                    <td>{player.value}</td>
+                                    <td className={player.value === player.max ? "have" : ""}>{player.value}</td>
                                     // <td className={player.value > 1 ? "have" : "need"}>{player.value}</td>
                                 ))
                             }
