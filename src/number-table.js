@@ -3,7 +3,7 @@ import './data-table.css';
 function NumberTable(props) {
     const {title, visiblePlayers, data} = props;
     return (
-        <div className="side-by-side">
+        <div className="padded">
             <table>
                 <tbody>
                 <tr>
@@ -16,7 +16,7 @@ function NumberTable(props) {
                 </tr>
                 {
                     data.map(skill => (
-                        <tr>
+                        <tr key={skill.name} className={skill.players.map(player => (player.value)).reduce((previousValue, currentValue) => previousValue + currentValue, 0) === skill.players.length ? "need" : ""}>
                             <td>{skill.name}</td>
                             {
                                 skill.players.map(player => (
